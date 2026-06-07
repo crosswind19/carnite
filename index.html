@@ -466,6 +466,7 @@ function Hero({headline,accent,sub}){
   const lines=(headline||'Know before|you').split('|');
   const accentText=accent||'drive.';
   const subText=sub||'Calculate your exact car loan repayment in seconds. Reducing balance, flat rate, and extra repayment — all in one place.';
+  
   return(
     <header className="hero" id="top">
       <div className="hero-bg"/>
@@ -473,6 +474,7 @@ function Hero({headline,accent,sub}){
       <div className="hero-inner">
         <h1>{lines[0]}{lines[1]?<><br/>{lines[1]} </>:' '}<span className="accent">{accentText}</span></h1>
         <p className="hero-sub">{subText}</p>
+        <p className="hero-sub">Get your dream car ASAP</p>
         <div className="hero-ctas">
           <a href="#calculator" className="btn btn-primary" onClick={go('calculator')}>Calculate now <Icon name="arrow-right" size={18}/></a>
           <a href="#how" className="btn btn-ghost" onClick={go('how')}>How it works</a>
