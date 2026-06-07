@@ -1,0 +1,7 @@
+/* ============================================================
+   CARNITE — root stylesheet
+   Single entry point for consumers. Imports the canonical
+   design tokens (colors, type, spacing, radii, shadows, motion).
+   ============================================================ */
+
+@import url("./colors_and_type.css");

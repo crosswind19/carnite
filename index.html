@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carnite — Know before you drive.</title>
+  <link rel="icon" href="assets/carnite-logomark.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+/* ============================================================
+   CARNITE — Design Tokens
+   ============================================================ */
+:root {
+  --papaya:          #FF8000;
+  --papaya-hover:    #FF9A00;
+  --papaya-press:    #E66E00;
+  --papaya-soft:     rgba(255,128,0,0.12);
+  --papaya-line:     rgba(255,128,0,0.20);
+  --papaya-glow:     rgba(255,128,0,0.40);
+  --base:            #0A0A0A;
+  --surface:         #141414;
+  --surface-2:       #1B1B1B;
+  --border:          #2A2A2A;
+  --border-strong:   #3A3A3A;
+  --silver:          #C9CDD6;
+  --silver-light:    #E6E8EE;
+  --silver-dark:     #8A8E96;
+  --silver-soft:     rgba(201,205,214,0.10);
+  --silver-line:     rgba(201,205,214,0.22);
+  --silver-brushed:  linear-gradient(135deg,#E6E8EE 0%,#C9CDD6 38%,#8A8E96 100%);
+  --fg1:             #FFFFFF;
+  --fg2:             #A0A0A0;
+  --fg3:             #6A6A6A;
+  --glass-bg:        rgba(255,255,255,0.04);
+  --glass-border:    rgba(255,128,0,0.20);
+  --glass-blur:      blur(16px);
+  --hero-core:       #1A0A00;
+  --hero-edge:       #0A0A0A;
+  --positive:        #38D39F;
+  --positive-soft:   rgba(56,211,159,0.12);
+  --warn:            #FFB020;
+  --info:            #5B9DFF;
+  --font-head:  'Syne','Arial Black',sans-serif;
+  --font-body:  'DM Sans',system-ui,-apple-system,sans-serif;
+  --font-mono:  'JetBrains Mono',ui-monospace,monospace;
+  --fs-display:   clamp(3rem,7vw,6rem);
+  --fs-h1:        clamp(2.25rem,4.5vw,3.5rem);
+  --fs-h2:        clamp(1.75rem,3vw,2.5rem);
+  --fs-h3:        1.5rem;
+  --fs-lead:      1.25rem;
+  --fs-body:      1rem;
+  --fs-sm:        0.875rem;
+  --fs-xs:        0.75rem;
+  --lh-tight:     1.04;
+  --lh-snug:      1.2;
+  --lh-body:      1.6;
+  --ls-tight:    -0.03em;
+  --ls-caps:      0.14em;
+  --section-y: clamp(64px,10vw,128px);
+  --gutter:   clamp(20px,5vw,48px);
+  --maxw:     1200px;
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   20px;
+  --r-xl:   28px;
+  --r-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-2: 0 8px 24px rgba(0,0,0,0.45);
+  --shadow-3: 0 24px 64px rgba(0,0,0,0.55);
+  --shadow-papaya: 0 12px 40px rgba(255,128,0,0.28);
+  --focus-ring: 0 0 0 2px rgba(255,128,0,0.40);
+  --ease:       cubic-bezier(0.22,1,0.36,1);
+  --ease-snap:  cubic-bezier(0.16,1,0.3,1);
+  --dur-fast:   140ms;
+  --dur:        240ms;
+  --dur-slow:   480ms;
+}
+
+/* ============================================================
+   Site styles
+   ============================================================ */
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--base);color:var(--fg1);font-family:var(--font-body);-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+button{font-family:var(--font-body);}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gutter);}
+.num,.metric{font-family:var(--font-mono);font-variant-numeric:tabular-nums;}
+.ic-wrap svg{width:100%;height:100%;}
+.hero-glow{background:radial-gradient(50% 50% at 50% 50%,color-mix(in srgb,var(--papaya) 30%,transparent),transparent 70%);}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:15px;border-radius:var(--r-pill);padding:14px 24px;border:1px solid transparent;cursor:pointer;transition:background var(--dur) var(--ease),transform var(--dur-fast) var(--ease),box-shadow var(--dur) var(--ease),border-color var(--dur) var(--ease);}
+.btn svg,.btn i{width:18px;height:18px;}
+.btn-primary{background:var(--papaya);color:#0A0A0A;box-shadow:var(--shadow-papaya);}
+.btn-primary:hover{background:var(--papaya-hover);}
+.btn-primary:active{background:var(--papaya-press);transform:scale(.98);}
+.btn-ghost{background:transparent;color:var(--fg1);border-color:var(--border-strong);}
+.btn-ghost:hover{background:var(--surface-2);border-color:var(--fg3);}
+.btn-ghost:active{transform:scale(.98);}
+
+/* Navbar */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease),backdrop-filter var(--dur) var(--ease);border-bottom:1px solid transparent;}
+.nav.scrolled{background:rgba(10,10,10,.72);backdrop-filter:var(--glass-blur);border-bottom-color:var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;}
+.brand{display:flex;align-items:center;gap:11px;}
+.brand img{width:34px;height:34px;}
+.brand-name{font-family:var(--font-head);font-weight:800;font-size:23px;letter-spacing:-0.02em;}
+.nav-links{display:flex;gap:30px;align-items:center;}
+.nav-links a{color:var(--fg2);font-size:15px;font-weight:500;transition:color var(--dur) var(--ease);}
+.nav-links a:hover{color:var(--fg1);}
+@media(max-width:768px){.nav-links{display:none;}}
+
+/* Sections */
+section{position:relative;}
+.section-pad{padding:var(--section-y) 0;}
+.eyebrow{font-size:var(--fs-xs);font-weight:700;letter-spacing:var(--ls-caps);text-transform:uppercase;color:var(--papaya);margin:0 0 16px;}
+.section-head{font-family:var(--font-head);font-weight:700;font-size:var(--fs-h2);letter-spacing:-0.02em;line-height:1.1;margin:0;}
+.section-sub{color:var(--fg2);font-size:var(--fs-lead);margin:14px 0 0;max-width:560px;}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden;padding-top:72px;}
+.hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(120% 85% at 50% -5%,#1A0A00 0%,#0A0A0A 58%);}
+.hero-glow{position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:720px;height:520px;z-index:0;pointer-events:none;filter:blur(20px);animation:glowPulse 7s var(--ease) infinite;}
+@keyframes glowPulse{0%,100%{opacity:.7;transform:translateX(-50%) scale(1);}50%{opacity:1;transform:translateX(-50%) scale(1.08);}}
+@media(prefers-reduced-motion:reduce){.hero-glow{animation:none;}}
+.hero-inner{position:relative;z-index:1;max-width:880px;padding:0 var(--gutter);}
+.hero h1{font-family:var(--font-head);font-weight:800;font-size:var(--fs-display);line-height:.98;letter-spacing:var(--ls-tight);margin:0;}
+.hero h1 .accent{color:var(--papaya);}
+.hero-sub{color:var(--fg2);font-size:var(--fs-lead);line-height:1.5;max-width:600px;margin:24px auto 0;}
+.hero-ctas{display:flex;gap:14px;justify-content:center;margin-top:36px;flex-wrap:wrap;}
+.stats-strip{position:relative;z-index:1;display:inline-flex;align-items:center;gap:22px;margin-top:56px;background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:var(--glass-blur);border-radius:var(--r-pill);padding:15px 28px;flex-wrap:wrap;justify-content:center;}
+.stats-strip .dot{color:var(--border-strong);}
+.stats-strip b{font-family:var(--font-mono);font-weight:700;}
+.stats-strip span.lab{color:var(--fg2);font-weight:500;}
+
+/* Glass/cards */
+.glass{background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:var(--glass-blur);border-radius:var(--r-lg);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);}
+
+/* Calculator */
+.calc-panel{padding:clamp(20px,3vw,38px);margin-top:44px;}
+.method-toggle{display:flex;width:max-content;max-width:100%;gap:4px;background:var(--base);border:1px solid var(--border);border-radius:var(--r-pill);padding:5px;flex-wrap:nowrap;}
+.method-toggle button{white-space:nowrap;}
+@media(max-width:768px){.method-toggle{width:100%;flex-wrap:wrap;}.method-toggle button{flex:1 1 auto;}}
+.method-toggle button{border:0;border-radius:var(--r-pill);padding:11px 22px;font-weight:700;font-size:14px;background:transparent;color:var(--fg2);cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease);}
+.method-toggle button.active{background:var(--papaya);color:#0A0A0A;}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:28px;}
+@media(max-width:768px){.calc-grid{grid-template-columns:1fr;gap:22px;}}
+.field{margin-bottom:18px;}
+.field label{display:block;font-size:13px;color:var(--fg2);margin-bottom:8px;font-weight:500;}
+.input-wrap{display:flex;align-items:center;background:var(--base);border:1px solid var(--border);border-radius:var(--r-md);padding:0 14px;transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease);}
+.input-wrap:focus-within{border-color:var(--papaya);box-shadow:var(--focus-ring);}
+.input-wrap .pre{font-family:var(--font-mono);color:var(--fg2);font-size:15px;}
+.input-wrap input{border:0;background:transparent;color:var(--fg1);font-family:var(--font-mono);font-size:18px;padding:13px 8px;width:100%;outline:none;}
+.input-wrap .suf{color:var(--fg2);font-size:14px;white-space:nowrap;}
+.slider{width:100%;accent-color:var(--papaya);margin-top:8px;}
+.results{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.rcard{background:var(--base);border:1px solid var(--border);border-radius:var(--r-md);padding:16px 18px;}
+.rcard.hi{background:var(--papaya);border-color:var(--papaya);}
+.rcard .rv{font-family:var(--font-mono);font-size:26px;font-weight:700;}
+.rcard .rl{font-size:12px;color:var(--fg2);margin-top:4px;font-weight:500;}
+.rcard.hi .rv{color:#0A0A0A;}
+.rcard.hi .rl{color:rgba(10,10,10,.72);}
+.disclosure{margin-top:22px;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;}
+.disclosure-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;cursor:pointer;background:var(--base);}
+.disclosure-head:hover{background:var(--surface-2);}
+.disclosure-head .t{font-weight:700;display:flex;align-items:center;gap:10px;}
+.disclosure-head .chev{transition:transform var(--dur) var(--ease);color:var(--fg2);display:inline-flex;}
+.disclosure.open .chev{transform:rotate(180deg);}
+.disclosure-body{padding:0 18px;max-height:0;overflow:hidden;transition:max-height var(--dur-slow) var(--ease),padding var(--dur-slow) var(--ease);}
+.disclosure.open .disclosure-body{max-height:800px;padding:4px 18px 20px;}
+.extra-row{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;margin-bottom:12px;}
+.extra-row .x{background:transparent;border:1px solid var(--border);color:var(--fg2);border-radius:var(--r-sm);width:42px;height:42px;cursor:pointer;font-size:18px;}
+.extra-row .x:hover{border-color:var(--papaya);color:var(--papaya);}
+.mini-select{display:flex;gap:4px;background:var(--base);border:1px solid var(--border);border-radius:var(--r-sm);padding:4px;}
+.mini-select button{flex:1;border:0;background:transparent;color:var(--fg2);padding:8px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;}
+.mini-select button.active{background:var(--surface-2);color:var(--fg1);}
+.savings-pills{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;}
+.spill{flex:1;min-width:120px;background:var(--positive-soft);border:1px solid rgba(56,211,159,.3);border-radius:var(--r-md);padding:13px 15px;}
+.spill .v{font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--positive);}
+.spill .l{font-size:11px;color:var(--fg2);margin-top:2px;}
+.add-row{font-size:13px;color:var(--papaya);font-weight:700;cursor:pointer;display:inline-flex;gap:6px;align-items:center;background:none;border:0;padding:4px 0;}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:768px){.compare-grid{grid-template-columns:1fr;}}
+.compare-col{background:var(--base);border:1px solid var(--border);border-radius:var(--r-md);padding:20px;}
+.compare-col h4{font-family:var(--font-head);margin:0 0 4px;font-size:18px;}
+.compare-col .cm{font-family:var(--font-mono);font-size:30px;font-weight:700;margin:12px 0 2px;}
+.compare-col.win{border-color:var(--papaya);}
+.compare-col.win .cm{color:var(--papaya);}
+.savings-banner{display:flex;align-items:center;gap:14px;margin-top:16px;background:var(--positive-soft);border:1px solid rgba(56,211,159,.32);border-radius:var(--r-md);padding:16px 20px;}
+.savings-banner .v{font-family:var(--font-mono);font-weight:700;color:var(--positive);font-size:20px;}
+.chart-tabs{display:flex;gap:8px;margin:32px 0 18px;}
+.chart-tabs button{background:var(--base);border:1px solid var(--border);color:var(--fg2);border-radius:var(--r-pill);padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;transition:all var(--dur) var(--ease);}
+.chart-tabs button.active{background:var(--surface-2);color:var(--fg1);border-color:var(--border-strong);}
+.chart-box{position:relative;height:280px;}
+table.schedule{width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:13px;}
+table.schedule th{text-align:right;color:var(--fg2);font-family:var(--font-body);font-size:12px;font-weight:700;padding:10px 12px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:0.06em;}
+table.schedule th:first-child,table.schedule td:first-child{text-align:left;}
+table.schedule td{padding:11px 12px;border-bottom:1px solid var(--border);color:var(--fg1);text-align:right;}
+table.schedule tr:hover td{background:var(--surface-2);}
+.pager{display:flex;align-items:center;justify-content:space-between;margin-top:14px;}
+.pager button{background:var(--base);border:1px solid var(--border);color:var(--fg1);border-radius:var(--r-sm);padding:8px 14px;cursor:pointer;font-size:13px;}
+.pager button:disabled{opacity:.4;cursor:default;}
+
+/* Why Carnite */
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px;}
+@media(max-width:768px){.features{grid-template-columns:1fr;}}
+.feature{padding:28px;border-top:3px solid var(--papaya);}
+.feature h3{font-family:var(--font-head);font-weight:700;font-size:21px;margin:18px 0 8px;}
+.feature p{color:var(--fg2);margin:0;line-height:1.55;font-size:15px;}
+
+/* Rates teaser */
+.rate-control{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;margin:32px 0 16px;padding:16px 22px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);}
+@media(max-width:768px){.rate-control{grid-template-columns:1fr;gap:14px;}}
+.rate-control label{display:flex;flex-direction:column;gap:6px;}
+.rate-control .rl{font-size:12px;color:var(--fg2);text-transform:uppercase;letter-spacing:0.08em;font-weight:700;}
+.rate-control .rate-input{display:inline-flex;align-items:baseline;gap:4px;background:var(--base);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 12px;transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease);}
+.rate-control .rate-input:focus-within{border-color:var(--papaya);box-shadow:var(--focus-ring);}
+.rate-control .rate-input input{border:0;background:transparent;color:var(--papaya);font-family:var(--font-mono);font-weight:700;font-size:22px;width:70px;outline:none;-moz-appearance:textfield;}
+.rate-control .rate-input input::-webkit-outer-spin-button,.rate-control .rate-input input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.rate-control .rate-input .suf{color:var(--papaya);font-family:var(--font-mono);font-weight:700;font-size:18px;}
+.rate-control .hint{font-family:var(--font-mono);font-size:13px;color:var(--fg2);white-space:nowrap;}
+.rates-wrap{position:relative;margin-top:0;}
+.rates{width:100%;border-collapse:collapse;}
+.rates th{text-align:left;color:var(--fg2);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:14px 18px;border-bottom:1px solid var(--border);}
+.rates th.r,.rates td.r{text-align:right;font-family:var(--font-mono);}
+.rates td{padding:18px;border-bottom:1px solid var(--border);font-size:15px;}
+.rates td.bank{font-weight:700;}
+.rates tr.blur td{filter:blur(6px);opacity:.55;user-select:none;}
+.rates-overlay{position:absolute;left:0;right:0;bottom:0;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:28px;gap:16px;background:linear-gradient(to bottom,transparent,var(--base) 72%);}
+
+/* How it works */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;position:relative;}
+@media(max-width:768px){.steps{grid-template-columns:1fr;gap:40px;}}
+.step{position:relative;z-index:1;}
+.step .n{font-family:var(--font-head);font-weight:800;font-size:84px;line-height:1;color:var(--papaya);opacity:.9;}
+.step h3{font-family:var(--font-head);font-weight:700;font-size:20px;margin:10px 0 8px;}
+.step p{color:var(--fg2);margin:0;line-height:1.5;}
+.steps .dash{position:absolute;top:42px;left:8%;right:8%;height:2px;z-index:0;background-image:linear-gradient(to right,var(--papaya) 50%,transparent 50%);background-size:14px 2px;opacity:.4;}
+@media(max-width:768px){.steps .dash{display:none;}}
+
+/* Footer */
+.footer{border-top:1px solid var(--border);padding:56px 0 40px;}
+.footer-top{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;}
+.footer .brand-name{font-size:20px;}
+.footer-tag{color:var(--fg2);margin-top:12px;font-size:14px;}
+.footer-nav{display:flex;gap:28px;flex-wrap:wrap;}
+.footer-nav a{color:var(--fg2);font-size:14px;transition:color var(--dur) var(--ease);}
+.footer-nav a:hover{color:var(--fg1);}
+.footer-my{color:var(--fg2);font-size:14px;}
+.footer-disc{color:var(--fg3);font-size:12px;line-height:1.6;margin-top:36px;padding-top:24px;border-top:1px solid var(--border);max-width:720px;}
+
+/* ---- Comparison table ---- */
+.compare-section{background:radial-gradient(80% 50% at 50% 0%,rgba(255,128,0,0.06),transparent 60%),var(--base);}
+.cmp-wrap{margin-top:44px;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;background:var(--surface);}
+.cmp-row{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;align-items:stretch;}
+.cmp-row+.cmp-row{border-top:1px solid var(--border);}
+.cmp-row>div{padding:22px 24px;display:flex;align-items:center;font-size:15px;color:var(--fg1);}
+.cmp-row>div+div{border-left:1px solid var(--border);}
+.cmp-row.head>div{color:var(--fg2);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:var(--ls-caps);padding:18px 24px;}
+.cmp-row.head .cmp-us{color:var(--papaya);}
+.cmp-row .cmp-feat{color:var(--fg1);font-weight:600;}
+.cmp-row .cmp-feat small{display:block;color:var(--fg2);font-weight:400;font-size:13px;margin-top:3px;}
+.cmp-row .cmp-us{background:linear-gradient(180deg,rgba(255,128,0,0.06),rgba(255,128,0,0.02));}
+.cmp-check{color:var(--positive);display:inline-flex;}
+.cmp-x{color:var(--fg3);display:inline-flex;}
+.cmp-cell-val{font-family:var(--font-mono);font-weight:700;font-size:16px;}
+@media(max-width:768px){
+  .cmp-row{grid-template-columns:1.6fr 1fr 1fr;}
+  .cmp-row>div{padding:14px 14px;font-size:14px;}
+  .cmp-row.head>div{padding:12px 14px;font-size:11px;}
+  .cmp-row .cmp-feat small{font-size:12px;}
+  .cmp-row .cmp-hide{display:none;}
+}
+
+/* ---- Testimonials ---- */
+.tt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px;}
+@media(max-width:1100px){.tt-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:720px){.tt-grid{grid-template-columns:1fr;}}
+.tt-card{padding:28px;display:flex;flex-direction:column;gap:18px;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease);}
+.tt-card:hover{border-color:var(--border-strong);}
+.tt-card .quote-mark{font-family:var(--font-head);font-weight:800;color:var(--papaya);font-size:56px;line-height:0.4;opacity:.9;height:22px;}
+.tt-card blockquote{margin:0;font-size:16px;line-height:1.55;color:var(--fg1);flex:1;}
+.tt-card .who{display:flex;align-items:center;gap:14px;border-top:1px solid var(--border);padding-top:18px;}
+.tt-card .avatar{width:42px;height:42px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:700;font-size:16px;color:#0A0A0A;background:var(--silver-brushed,linear-gradient(135deg,#E6E8EE,#8A8E96));}
+.tt-card .who .name{font-weight:700;font-size:14px;color:var(--fg1);}
+.tt-card .who .meta{font-size:12px;color:var(--fg2);font-family:var(--font-mono);}
+.tt-card .saved{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:13px;color:var(--positive);font-weight:700;}
+.tt-card .saved::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--positive);box-shadow:0 0 12px var(--positive);}
+
+/* ---- FAQ ---- */
+.faq-layout{display:grid;grid-template-columns:1fr 1.5fr;gap:56px;margin-top:32px;}
+@media(max-width:900px){.faq-layout{grid-template-columns:1fr;gap:24px;}}
+.faq-list{display:flex;flex-direction:column;gap:8px;}
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease);}
+.faq-item.open{border-color:var(--papaya);background:var(--surface-2);}
+.faq-q{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;cursor:pointer;width:100%;text-align:left;background:transparent;border:0;color:var(--fg1);font-size:16px;font-weight:600;font-family:var(--font-body);}
+.faq-q:hover{background:var(--surface-2);}
+.faq-q .chev{color:var(--fg2);display:inline-flex;transition:transform var(--dur) var(--ease),color var(--dur) var(--ease);}
+.faq-item.open .faq-q .chev{transform:rotate(45deg);color:var(--papaya);}
+.faq-a{padding:0 24px;max-height:0;overflow:hidden;transition:max-height var(--dur-slow) var(--ease),padding var(--dur-slow) var(--ease);color:var(--fg2);font-size:15px;line-height:1.6;}
+.faq-item.open .faq-a{max-height:400px;padding:0 24px 22px;}
+.faq-cta{padding:32px;display:flex;flex-direction:column;gap:16px;align-self:start;position:sticky;top:96px;}
+.faq-cta h3{font-family:var(--font-head);font-size:24px;margin:0;line-height:1.2;letter-spacing:var(--ls-tight);}
+.faq-cta p{color:var(--fg2);margin:0;font-size:14px;line-height:1.6;}
+.faq-cta .btn{align-self:flex-start;}
+.head-row{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap;}
+.head-row .ks{font-family:var(--font-mono);color:var(--fg2);font-size:13px;white-space:nowrap;}
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Calculation logic -->
+  <script>
+/* ============================================================
+   Carnite — calculation logic (pure functions)
+   ============================================================ */
+(function(){
+  const round=(x)=>Math.round(x);
+  function reducingInstalment(P,annualRate,months){const r=annualRate/100/12;if(r===0)return P/months;const f=Math.pow(1+r,months);return(P*r*f)/(f-1);}
+  function flatInstalment(P,annualRate,months){const years=months/12;const totalInterest=P*(annualRate/100)*years;return(P+totalInterest)/months;}
+  function reducingSummary(P,annualRate,months){const r=annualRate/100/12;const M=reducingInstalment(P,annualRate,months);let balance=P;const schedule=[];for(let i=1;i<=months;i++){const interest=balance*r;let principal=M-interest;if(i===months)principal=balance;balance=Math.max(0,balance-principal);schedule.push({month:i,payment:interest+principal,interest,principal,balance});}const totalInterest=schedule.reduce((s,x)=>s+x.interest,0);return{method:'reducing',instalment:M,months,totalInterest,totalPayable:P+totalInterest,principal:P,schedule};}
+  function flatSummary(P,annualRate,months){const years=months/12;const totalInterest=P*(annualRate/100)*years;const M=(P+totalInterest)/months;const monthlyInterest=totalInterest/months;const monthlyPrincipal=P/months;let balance=P;const schedule=[];for(let i=1;i<=months;i++){balance=Math.max(0,balance-monthlyPrincipal);schedule.push({month:i,payment:M,interest:monthlyInterest,principal:monthlyPrincipal,balance});}return{method:'flat',instalment:M,months,totalInterest,totalPayable:P+totalInterest,principal:P,schedule};}
+  function reducingWithExtra(P,annualRate,months,extraMonthly,lumpSum,lumpMonth){const r=annualRate/100/12;const M=reducingInstalment(P,annualRate,months);let balance=P,i=0,totalInterest=0;const schedule=[];while(balance>0.005&&i<months*2+5){i++;const interest=balance*r;let principal=M-interest+(extraMonthly||0);if(lumpSum&&i===lumpMonth)principal+=lumpSum;if(principal>balance)principal=balance;totalInterest+=interest;balance=Math.max(0,balance-principal);schedule.push({month:i,payment:interest+principal,interest,principal,balance});}return{method:'reducing-extra',instalment:M,months:i,totalInterest,totalPayable:P+totalInterest,principal:P,schedule};}
+  function yearly(schedule){const out=[];schedule.forEach((row)=>{const y=Math.ceil(row.month/12);if(!out[y-1])out[y-1]={year:y,principal:0,interest:0};out[y-1].principal+=row.principal;out[y-1].interest+=row.interest;});return out;}
+  function payoffDate(months,from){const d=from?new Date(from):new Date();d.setMonth(d.getMonth()+months);return d.toLocaleDateString('en-GB',{month:'short',year:'numeric'});}
+  const fmtRM=(x)=>'RM'+round(x).toLocaleString('en-MY');
+  const fmtRM2=(x)=>'RM'+Number(x).toLocaleString('en-MY',{minimumFractionDigits:2,maximumFractionDigits:2});
+  window.Carnite={reducingInstalment,flatInstalment,reducingSummary,flatSummary,reducingWithExtra,yearly,payoffDate,fmtRM,fmtRM2,round};
+})();
+  </script>
+
+  <!-- Tweaks panel -->
+  <script type="text/babel">
+const __TWEAKS_STYLE=`.twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;max-height:calc(100vh - 32px);display:flex;flex-direction:column;transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom right;background:rgba(250,249,247,.78);color:#29261b;-webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);border:.5px solid rgba(255,255,255,.6);border-radius:14px;box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}.twk-hd{display:flex;align-items:center;justify-content:space-between;padding:10px 8px 10px 14px;cursor:move;user-select:none}.twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}.twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}.twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}.twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;overflow-x:hidden;min-height:0;scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}.twk-row{display:flex;flex-direction:column;gap:5px}.twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}.twk-lbl{display:flex;justify-content:space-between;align-items:baseline;color:rgba(41,38,27,.72)}.twk-lbl>span:first-child{font-weight:500}.twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}.twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(41,38,27,.45);padding:10px 0 0}.twk-sect:first-child{padding-top:0}.twk-field{appearance:none;box-sizing:border-box;width:100%;min-width:0;height:26px;padding:0 8px;border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}.twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}.twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;border-radius:999px;background:rgba(0,0,0,.12);outline:none}.twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}.twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}.twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;background:rgba(0,0,0,.06);user-select:none}.twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}.twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;overflow-wrap:anywhere}.twk-chips{display:flex;gap:6px}.twk-chip{position:relative;appearance:none;flex:1;min-width:0;height:46px;padding:0;border:0;border-radius:6px;overflow:hidden;cursor:default;box-shadow:0 0 0 .5px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.06);transition:transform .12s cubic-bezier(.3,.7,.4,1),box-shadow .12s}.twk-chip:hover{transform:translateY(-1px);box-shadow:0 0 0 .5px rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.12)}.twk-chip[data-on="1"]{box-shadow:0 0 0 1.5px rgba(0,0,0,.85),0 2px 6px rgba(0,0,0,.15)}.twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}`;
+
+function useTweaks(defaults){
+  const[values,setValues]=React.useState(defaults);
+  const setTweak=React.useCallback((keyOrEdits,val)=>{
+    const edits=typeof keyOrEdits==='object'&&keyOrEdits!==null?keyOrEdits:{[keyOrEdits]:val};
+    setValues((prev)=>({...prev,...edits}));
+    window.parent.postMessage({type:'__edit_mode_set_keys',edits},'*');
+    window.dispatchEvent(new CustomEvent('tweakchange',{detail:edits}));
+  },[]);
+  return[values,setTweak];
+}
+
+function TweaksPanel({title='Tweaks',children}){
+  const[open,setOpen]=React.useState(false);
+  const dragRef=React.useRef(null);
+  const offsetRef=React.useRef({x:16,y:16});
+  const PAD=16;
+  const clamp=React.useCallback(()=>{
+    const p=dragRef.current;if(!p)return;
+    const w=p.offsetWidth,h=p.offsetHeight;
+    const mr=Math.max(PAD,window.innerWidth-w-PAD),mb=Math.max(PAD,window.innerHeight-h-PAD);
+    offsetRef.current={x:Math.min(mr,Math.max(PAD,offsetRef.current.x)),y:Math.min(mb,Math.max(PAD,offsetRef.current.y))};
+    p.style.right=offsetRef.current.x+'px';p.style.bottom=offsetRef.current.y+'px';
+  },[]);
+  React.useEffect(()=>{if(!open)return;clamp();const ro=new ResizeObserver(clamp);ro.observe(document.documentElement);return()=>ro.disconnect();},[open,clamp]);
+  React.useEffect(()=>{
+    const h=(e)=>{const t=e?.data?.type;if(t==='__activate_edit_mode')setOpen(true);else if(t==='__deactivate_edit_mode')setOpen(false);};
+    window.addEventListener('message',h);window.parent.postMessage({type:'__edit_mode_available'},'*');
+    return()=>window.removeEventListener('message',h);
+  },[]);
+  const dismiss=()=>{setOpen(false);window.parent.postMessage({type:'__edit_mode_dismissed'},'*');};
+  const onDragStart=(e)=>{
+    const p=dragRef.current;if(!p)return;
+    const r=p.getBoundingClientRect(),sx=e.clientX,sy=e.clientY;
+    const sr=window.innerWidth-r.right,sb=window.innerHeight-r.bottom;
+    const move=(ev)=>{offsetRef.current={x:sr-(ev.clientX-sx),y:sb-(ev.clientY-sy)};clamp();};
+    const up=()=>{window.removeEventListener('mousemove',move);window.removeEventListener('mouseup',up);};
+    window.addEventListener('mousemove',move);window.addEventListener('mouseup',up);
+  };
+  if(!open)return null;
+  return(<><style>{__TWEAKS_STYLE}</style><div ref={dragRef} className="twk-panel" style={{right:offsetRef.current.x,bottom:offsetRef.current.y}}><div className="twk-hd" onMouseDown={onDragStart}><b>{title}</b><button className="twk-x" onMouseDown={(e)=>e.stopPropagation()} onClick={dismiss}>✕</button></div><div className="twk-body">{children}</div></div></>);
+}
+
+function TweakSection({label,children}){return(<><div className="twk-sect">{label}</div>{children}</>);}
+function TweakRow({label,value,children,inline=false}){return(<div className={inline?'twk-row twk-row-h':'twk-row'}><div className="twk-lbl"><span>{label}</span>{value!=null&&<span className="twk-val">{value}</span>}</div>{children}</div>);}
+function TweakSlider({label,value,min=0,max=100,step=1,unit='',onChange}){return(<TweakRow label={label} value={`${value}${unit}`}><input type="range" className="twk-slider" min={min} max={max} step={step} value={value} onChange={(e)=>onChange(Number(e.target.value))}/></TweakRow>);}
+function TweakText({label,value,placeholder,onChange}){return(<TweakRow label={label}><input className="twk-field" type="text" value={value} placeholder={placeholder} onChange={(e)=>onChange(e.target.value)}/></TweakRow>);}
+function TweakSelect({label,value,options,onChange}){return(<TweakRow label={label}><select className="twk-field" value={value} onChange={(e)=>onChange(e.target.value)}>{options.map((o)=>{const v=typeof o==='object'?o.value:o,l=typeof o==='object'?o.label:o;return<option key={v} value={v}>{l}</option>;})}</select></TweakRow>);}
+function TweakRadio({label,value,options,onChange}){
+  const trackRef=React.useRef(null);const[dragging,setDragging]=React.useState(false);const valueRef=React.useRef(value);valueRef.current=value;
+  const labelLen=(o)=>String(typeof o==='object'?o.label:o).length;
+  const maxLen=options.reduce((m,o)=>Math.max(m,labelLen(o)),0);
+  const fits=maxLen<=({2:16,3:10}[options.length]??0);
+  if(!fits){const resolve=(s)=>{const m=options.find((o)=>String(typeof o==='object'?o.value:o)===s);return m===undefined?s:typeof m==='object'?m.value:m;};return<TweakSelect label={label} value={value} options={options} onChange={(s)=>onChange(resolve(s))}/>;}
+  const opts=options.map((o)=>(typeof o==='object'?o:{value:o,label:o}));
+  const idx=Math.max(0,opts.findIndex((o)=>o.value===value));const n=opts.length;
+  const segAt=(cx)=>{const r=trackRef.current.getBoundingClientRect();const inner=r.width-4;const i=Math.floor(((cx-r.left-2)/inner)*n);return opts[Math.max(0,Math.min(n-1,i))].value;};
+  const onPD=(e)=>{setDragging(true);const v0=segAt(e.clientX);if(v0!==valueRef.current)onChange(v0);const move=(ev)=>{if(!trackRef.current)return;const v=segAt(ev.clientX);if(v!==valueRef.current)onChange(v);};const up=()=>{setDragging(false);window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);};window.addEventListener('pointermove',move);window.addEventListener('pointerup',up);};
+  return(<TweakRow label={label}><div ref={trackRef} role="radiogroup" onPointerDown={onPD} className={dragging?'twk-seg dragging':'twk-seg'}><div className="twk-seg-thumb" style={{left:`calc(2px + ${idx} * (100% - 4px) / ${n})`,width:`calc((100% - 4px) / ${n})`}}/>{opts.map((o)=><button key={o.value} type="button" role="radio" aria-checked={o.value===value}>{o.label}</button>)}</div></TweakRow>);
+}
+function __twkIsLight(hex){const h=String(hex).replace('#','');const x=h.length===3?h.replace(/./g,(c)=>c+c):h.padEnd(6,'0');const n=parseInt(x.slice(0,6),16);if(Number.isNaN(n))return true;const r=(n>>16)&255,g=(n>>8)&255,b=n&255;return r*299+g*587+b*114>148000;}
+const __TwkCheck=({light})=>(<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.2 5.8 10 11 4.2" fill="none" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" stroke={light?'rgba(0,0,0,.78)':'#fff'}/></svg>);
+function TweakColor({label,value,options,onChange}){
+  if(!options||!options.length)return(<div className="twk-row twk-row-h"><div className="twk-lbl"><span>{label}</span></div><input type="color" className="twk-swatch" value={value} onChange={(e)=>onChange(e.target.value)}/></div>);
+  const key=(o)=>String(JSON.stringify(o)).toLowerCase();const cur=key(value);
+  return(<TweakRow label={label}><div className="twk-chips" role="radiogroup">{options.map((o,i)=>{const colors=Array.isArray(o)?o:[o];const[hero,...rest]=colors;const sup=rest.slice(0,4);const on=key(o)===cur;return(<button key={i} type="button" className="twk-chip" role="radio" aria-checked={on} data-on={on?'1':'0'} title={colors.join(' · ')} style={{background:hero}} onClick={()=>onChange(o)}>{sup.length>0&&<span>{sup.map((c,j)=><i key={j} style={{background:c}}/>)}</span>}{on&&<__TwkCheck light={__twkIsLight(hero)}/>}</button>);})}</div></TweakRow>);
+}
+Object.assign(window,{useTweaks,TweaksPanel,TweakSection,TweakRow,TweakSlider,TweakText,TweakSelect,TweakRadio,TweakColor});
+  </script>
+
+  <!-- Shared components -->
+  <script type="text/babel">
+const{useState,useEffect,useRef}=React;
+
+function Icon({name,size=24,color,strokeWidth=2,style}){
+  const ref=useRef(null);
+  useEffect(()=>{if(ref.current&&window.lucide){ref.current.innerHTML='';const i=document.createElement('i');i.setAttribute('data-lucide',name);ref.current.appendChild(i);window.lucide.createIcons({attrs:{'stroke-width':strokeWidth}});}
+  },[name,strokeWidth]);
+  return<span ref={ref} className="ic-wrap" style={{display:'inline-flex',width:size,height:size,color,...style}}/>;
+}
+
+function useCountUp(value,duration=650){
+  const[disp,setDisp]=useState(value);const prev=useRef(value);
+  useEffect(()=>{
+    const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce){prev.current=value;setDisp(value);return;}
+    const from=prev.current,to=value,start=performance.now();let raf;
+    const tick=(t)=>{const k=Math.min(1,(t-start)/duration);const e=1-Math.pow(1-k,3);setDisp(from+(to-from)*e);if(k<1)raf=requestAnimationFrame(tick);else prev.current=to;};
+    raf=requestAnimationFrame(tick);return()=>cancelAnimationFrame(raf);
+  },[value]);
+  return disp;
+}
+
+function Navbar(){
+  const[scrolled,setScrolled]=useState(false);
+  useEffect(()=>{const h=()=>setScrolled(window.scrollY>20);window.addEventListener('scroll',h);h();return()=>window.removeEventListener('scroll',h);},[]);
+  const go=(id)=>(e)=>{e.preventDefault();document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});};
+  return(
+    <nav className={'nav'+(scrolled?' scrolled':'')}>
+      <div className="wrap nav-inner">
+        <a href="#top" className="brand" onClick={go('top')}>
+          <img src="assets/carnite-logomark.svg" alt="Carnite"/>
+          <span className="brand-name">Carnite</span>
+        </a>
+        <div className="nav-links">
+          <a href="#calculator" onClick={go('calculator')}>Calculator</a>
+          <a href="#why" onClick={go('why')}>Why Carnite</a>
+          <a href="#rates" onClick={go('rates')}>Rates</a>
+          <a href="#how" onClick={go('how')}>How it works</a>
+        </div>
+        <a href="#rates" className="btn btn-primary" onClick={go('rates')}>Compare Rates <Icon name="arrow-right" size={18}/></a>
+      </div>
+    </nav>
+  );
+}
+
+function Hero({headline,accent,sub}){
+  const go=(id)=>(e)=>{e.preventDefault();document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});};
+  const lines=(headline||'Know before|you').split('|');
+  const accentText=accent||'drive.';
+  const subText=sub||'Calculate your exact car loan repayment in seconds. Reducing balance, flat rate, and extra repayment — all in one place.';
+  return(
+    <header className="hero" id="top">
+      <div className="hero-bg"/>
+      <div className="hero-glow"/>
+      <div className="hero-inner">
+        <h1>{lines[0]}{lines[1]?<><br/>{lines[1]} </>:' '}<span className="accent">{accentText}</span></h1>
+        <p className="hero-sub">{subText}</p>
+        <div className="hero-ctas">
+          <a href="#calculator" className="btn btn-primary" onClick={go('calculator')}>Calculate now <Icon name="arrow-right" size={18}/></a>
+          <a href="#how" className="btn btn-ghost" onClick={go('how')}>How it works</a>
+        </div>
+      </div>
+      <div className="stats-strip">
+        <span><b>RM0</b> <span className="lab">hidden fees</span></span>
+        <span className="dot">·</span>
+        <span><b>2</b> <span className="lab">loan methods</span></span>
+        <span className="dot">·</span>
+        <span className="lab" style={{color:'var(--fg1)',fontWeight:600}}>Extra repayment simulator</span>
+      </div>
+    </header>
+  );
+}
+
+function WhyCarnite(){
+  const items=[
+    {ic:'trending-down',h:'Reducing Balance',p:'Interest charged only on what you still owe. Watch the balance — and the interest — shrink every single month.'},
+    {ic:'wallet',h:'Extra Repayment Simulator',p:"Throw in a lump sum or pay a little extra monthly. See exactly how much interest you save and when you're free."},
+    {ic:'git-compare',h:'Side-by-Side Comparison',p:'Reducing balance vs flat rate, head to head. No jargon — just the real numbers, side by side.'},
+  ];
+  return(
+    <section className="section-pad" id="why">
+      <div className="wrap">
+        <p className="eyebrow">Why Carnite</p>
+        <h2 className="section-head">Built different.</h2>
+        <div className="features">
+          {items.map((it)=>(
+            <div key={it.h} className="glass feature">
+              <Icon name={it.ic} size={38} color="var(--papaya)"/>
+              <h3>{it.h}</h3><p>{it.p}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RatesTeaser(){
+  const[flat,setFlat]=useState(3.00);
+  const banks=['Maybank','CIMB','RHB','Public Bank','Bank Islam','Affin Bank'];
+  const eff=(flat*1.86).toFixed(2);const fmtFlat=flat.toFixed(2);
+  const handle=(v)=>{const n=Math.max(0,Math.min(15,Number(v)||0));setFlat(n);};
+  return(
+    <section className="section-pad" id="rates">
+      <div className="wrap">
+        <p className="eyebrow">Live market · indicative</p>
+        <h2 className="section-head">Current car loan rates in Malaysia.</h2>
+        <p className="section-sub">New-car hire purchase. Adjust the indicative rate to model the market.</p>
+        <div className="rate-control">
+          <label>
+            <span className="rl">Indicative flat rate</span>
+            <div className="rate-input">
+              <input type="number" step="0.05" min="0" max="15" value={fmtFlat} onChange={(e)=>handle(e.target.value)}/>
+              <span className="suf">%</span>
+            </div>
+          </label>
+          <input type="range" className="slider" min="0" max="6" step="0.05" value={flat} onChange={(e)=>handle(e.target.value)}/>
+          <span className="hint">≈ {eff}% effective over 7 yrs</span>
+        </div>
+        <div className="rates-wrap card" style={{overflow:'hidden',paddingBottom:8}}>
+          <table className="rates">
+            <thead><tr><th>Bank</th><th className="r">Flat rate (p.a.)</th><th className="r">Effective rate</th></tr></thead>
+            <tbody>{banks.map((bank,i)=>(<tr key={bank} className={i>=2?'blur':''}><td className="bank">{bank}</td><td className="r">{fmtFlat}%</td><td className="r">{eff}%</td></tr>))}</tbody>
+          </table>
+          <div className="rates-overlay">
+            <a href="#calculator" className="btn btn-primary" onClick={(e)=>{e.preventDefault();document.getElementById('calculator')?.scrollIntoView({behavior:'smooth'});}}>See all rates <Icon name="arrow-right" size={18}/></a>
+            <span style={{color:'var(--fg2)',fontSize:13}}>6 banks · sample values</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HowItWorks(){
+  const steps=[
+    {n:'01',h:'Enter price & down payment',p:"Punch in the car price and how much you're putting down."},
+    {n:'02',h:'Choose method & tenure',p:'Reducing balance or flat rate, and how many years to pay.'},
+    {n:'03',h:'See full breakdown instantly',p:'Monthly instalment, total interest, chart and schedule — live.'},
+  ];
+  return(
+    <section className="section-pad" id="how">
+      <div className="wrap">
+        <p className="eyebrow">How it works</p>
+        <h2 className="section-head">Three steps to clarity.</h2>
+        <div className="steps">
+          <div className="dash"/>
+          {steps.map((s)=>(<div key={s.n} className="step"><div className="n">{s.n}</div><h3>{s.h}</h3><p>{s.p}</p></div>))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer(){
+  return(
+    <footer className="footer">
+      <div className="wrap footer-top">
+        <div>
+          <div className="brand" style={{gap:10}}>
+            <img src="assets/carnite-logomark.svg" width="30" height="30" alt=""/>
+            <span className="brand-name">Carnite</span>
+          </div>
+          <div className="footer-tag">Know before you drive.</div>
+        </div>
+        <div className="footer-nav">
+          <a href="#calculator">Calculator</a>
+          <a href="#why">Why Carnite</a>
+          <a href="#rates">Rates</a>
+          <a href="#how">How it works</a>
+        </div>
+        <div className="footer-my">Built for Malaysian car buyers 🇲🇾</div>
+      </div>
+      <div className="wrap">
+        <p className="footer-disc">Rates shown are indicative only. Always confirm with your bank before making any financial decision.</p>
+      </div>
+    </footer>
+  );
+}
+Object.assign(window,{Icon,useCountUp,Navbar,Hero,WhyCarnite,RatesTeaser,HowItWorks,Footer});
+  </script>
+
+  <!-- Extra sections -->
+  <script type="text/babel">
+const{useState:xState}=React;
+
+function ComparisonTable(){
+  const rows=[
+    {f:'Reducing balance + flat rate',sub:'Both methods, one screen',us:'check',bank:'half',sheet:'half'},
+    {f:'Extra repayment simulator',sub:'Monthly add-ons and lump sums',us:'check',bank:'x',sheet:'half'},
+    {f:'Side-by-side comparison',sub:'See the savings, instantly',us:'check',bank:'x',sheet:'x'},
+    {f:'Live amortisation chart',sub:'Principal vs interest, by year',us:'check',bank:'x',sheet:'half'},
+    {f:'Time to first answer',sub:'From landing to instalment',us:'val:~3 sec',bank:'val:2 min',sheet:'val:15 min'},
+    {f:'Hidden fees',sub:'Sign-ups, upsells, retargeting',us:'val:RM0',bank:'x',sheet:'check'},
+  ];
+  const Cell=({kind})=>{
+    if(typeof kind==='string'&&kind.startsWith('val:'))return<span className="cmp-cell-val">{kind.slice(4)}</span>;
+    if(kind==='check')return<span className="cmp-check"><Icon name="check" size={22} strokeWidth={2.5}/></span>;
+    if(kind==='half')return<span className="cmp-x" style={{color:'var(--fg2)'}}><Icon name="minus" size={22} strokeWidth={2.5}/></span>;
+    return<span className="cmp-x"><Icon name="x" size={22} strokeWidth={2.5}/></span>;
+  };
+  return(
+    <section className="section-pad compare-section" id="compare">
+      <div className="wrap">
+        <div className="head-row">
+          <div><p className="eyebrow">Compare</p><h2 className="section-head">Carnite vs the rest.</h2><p className="section-sub">What you get here, and what you don't get anywhere else.</p></div>
+          <span className="ks">6 dimensions · honest</span>
+        </div>
+        <div className="cmp-wrap">
+          <div className="cmp-row head"><div>Feature</div><div className="cmp-us">Carnite</div><div className="cmp-hide">Bank calculator</div><div>Spreadsheet</div></div>
+          {rows.map((r)=>(<div className="cmp-row" key={r.f}><div className="cmp-feat"><div><div>{r.f}</div><small>{r.sub}</small></div></div><div className="cmp-us"><Cell kind={r.us}/></div><div className="cmp-hide"><Cell kind={r.bank}/></div><div><Cell kind={r.sheet}/></div></div>))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Testimonials(){
+  const quotes=[
+    {q:'I almost signed a 7-year flat rate. Carnite showed me reducing balance saved me RM8,400. Twenty seconds of math, real money back in my pocket.',name:'Aisyah R.',meta:'Petaling Jaya · Honda City',avatar:'AR',saved:'RM8,400 saved'},
+    {q:'The extra-repayment simulator is the part nobody else has. I tried lump sums on month 12, 18, 24 — saw exactly which one pays the loan off two years early.',name:'Daniel T.',meta:'KL · Perodua Ativa',saved:'23 months sooner',avatar:'DT'},
+    {q:"Numbers in JetBrains Mono, properly aligned. I'm a finance person — I cannot tell you how rare that is. The math feels trustworthy because it looks engineered.",name:'Priya M.',meta:'Johor Bahru · Mazda CX-5',saved:'RM12,180 saved',avatar:'PM'},
+  ];
+  return(
+    <section className="section-pad" id="loved">
+      <div className="wrap">
+        <p className="eyebrow">Loved by buyers</p>
+        <h2 className="section-head">Money back, screenshot worthy.</h2>
+        <p className="section-sub">Real Malaysians, real loans, real numbers. No paid placements.</p>
+        <div className="tt-grid">
+          {quotes.map((t)=>(
+            <article className="card tt-card" key={t.name}>
+              <span className="quote-mark">"</span>
+              <blockquote>{t.q}</blockquote>
+              <span className="saved">{t.saved}</span>
+              <div className="who"><div className="avatar">{t.avatar}</div><div><div className="name">{t.name}</div><div className="meta">{t.meta}</div></div></div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FAQ(){
+  const qs=[
+    {q:"What's the difference between reducing balance and flat rate?",a:"Reducing balance charges interest only on what you still owe — so as you pay down the loan, the interest portion shrinks. Flat rate charges interest on the full original amount for the entire tenure. For the same headline rate, reducing balance is almost always cheaper. Carnite shows you both, side by side."},
+    {q:"Are the bank rates live?",a:"Not yet. The rates teaser shows indicative, market-representative values you can adjust to model the current landscape. We're working with banks to pipe in live rates — until then, always confirm with your bank before signing."},
+    {q:"Do I need to sign up to use the calculator?",a:"No. No account, no email, no upsell. Everything runs in your browser. We don't store your inputs, and we don't sell your data."},
+    {q:"Can I model extra repayments properly?",a:"Yes — this is the feature most calculators get wrong. Add as many extra payments as you want, mix monthly add-ons with one-off lump sums at specific months, and see the exact interest saved, months saved, and your new payoff date."},
+    {q:"How accurate is the calculation?",a:"We use the standard amortisation formula M = P·r·(1+r)ⁿ / ((1+r)ⁿ − 1) for reducing balance, and (P + P·rate·years) / months for flat. The schedule is computed month by month at full precision — no rounding shortcuts. Final-month balance is cleaned to zero."},
+    {q:"Is this affiliated with any bank?",a:"No. Carnite is independent. We don't take referral fees from banks. Our only goal is to help you make a clearer decision."},
+  ];
+  const[open,setOpen]=xState(0);
+  return(
+    <section className="section-pad" id="faq">
+      <div className="wrap">
+        <p className="eyebrow">Frequently asked</p>
+        <h2 className="section-head">Questions, answered straight.</h2>
+        <div className="faq-layout">
+          <aside className="glass faq-cta">
+            <Icon name="message-circle-question" size={28} color="var(--papaya)"/>
+            <h3>Still got questions?</h3>
+            <p>Stuck on a number? Spotting something off? We answer every email — usually within a day.</p>
+            <a href="mailto:hello@carnite.my" className="btn btn-ghost"><Icon name="mail" size={16}/> hello@carnite.my</a>
+          </aside>
+          <div className="faq-list">
+            {qs.map((item,i)=>(
+              <div key={item.q} className={'faq-item'+(open===i?' open':'')}>
+                <button className="faq-q" onClick={()=>setOpen(open===i?-1:i)}>
+                  <span>{item.q}</span>
+                  <span className="chev"><Icon name="plus" size={20} strokeWidth={2.5}/></span>
+                </button>
+                <div className="faq-a">{item.a}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+Object.assign(window,{ComparisonTable,Testimonials,FAQ});
+  </script>
+
+  <!-- Calculator -->
+  <script type="text/babel">
+const{useState:cState,useEffect:cEffect,useRef:cRef,useMemo}=React;
+const C=()=>window.Carnite;
+
+function reducingExtraSchedule(P,annualRate,months,extras){
+  const r=annualRate/100/12;const M=C().reducingInstalment(P,annualRate,months);
+  const monthlyExtra=extras.filter((e)=>e.type==='monthly').reduce((s,e)=>s+(Number(e.amount)||0),0);
+  const lumps=extras.filter((e)=>e.type==='lump');
+  let balance=P,i=0,totalInterest=0;const schedule=[];
+  while(balance>0.005&&i<months*3+5){i++;const interest=balance*r;let principal=M-interest+monthlyExtra;lumps.forEach((l)=>{if(i===(Number(l.month)||1))principal+=Number(l.amount)||0;});if(principal>balance)principal=balance;totalInterest+=interest;balance=Math.max(0,balance-principal);schedule.push({month:i,payment:interest+principal,interest,principal,balance});}
+  return{instalment:M,months:i,totalInterest,totalPayable:P+totalInterest,schedule};
+}
+
+function AffixField({label,pre,suf,value,onChange}){
+  return(<div className="field"><label>{label}</label><div className="input-wrap">{pre&&<span className="pre">{pre}</span>}<input type="text" inputMode="decimal" value={value} onChange={(e)=>onChange(e.target.value)}/>{suf&&<span className="suf">{suf}</span>}</div></div>);
+}
+
+function RCard({value,label,money=true,hi=false}){
+  const animated=useCountUp(money?value:value);
+  const display=money?C().fmtRM(animated):Math.round(animated).toLocaleString('en-MY');
+  return(<div className={'rcard'+(hi?' hi':'')}><div className="rv">{display}</div><div className="rl">{label}</div></div>);
+}
+
+function Calculator({defaults={}}){
+  const[method,setMethod]=cState(defaults.method||'reducing');
+  const[priceStr,setPriceStr]=cState(defaults.price||'100,000');
+  const[downStr,setDownStr]=cState(defaults.down||'10,000');
+  const[rateStr,setRateStr]=cState(defaults.rate||'2.85');
+  const[years,setYears]=cState(defaults.years||7);
+  const[extraOpen,setExtraOpen]=cState(false);
+  const[extras,setExtras]=cState([{id:1,type:'monthly',amount:'300',month:12}]);
+  const[view,setView]=cState('chart');
+  const[page,setPage]=cState(0);
+
+  const num=(s)=>Number(String(s).replace(/[^0-9.]/g,''))||0;
+  const price=num(priceStr),down=num(downStr),rate=num(rateStr);
+  const P=Math.max(0,price-down);const months=years*12;
+
+  const reducing=useMemo(()=>C().reducingSummary(P,rate,months),[P,rate,months]);
+  const flat=useMemo(()=>C().flatSummary(P,rate,months),[P,rate,months]);
+  const withExtra=useMemo(()=>(method==='reducing'&&extraOpen?reducingExtraSchedule(P,rate,months,extras):null),[method,extraOpen,P,rate,months,extras]);
+
+  const active=method==='flat'?flat:reducing;
+  const scheduleSrc=withExtra?withExtra:active;
+  const interestSaved=withExtra?reducing.totalInterest-withExtra.totalInterest:0;
+  const monthsSaved=withExtra?reducing.months-withExtra.months:0;
+  const compareSaved=flat.totalInterest-reducing.totalInterest;
+
+  const canvasRef=cRef(null);const chartRef=cRef(null);
+  cEffect(()=>{
+    if(view!=='chart'||!canvasRef.current||!window.Chart)return;
+    const src=method==='compare'?reducing:scheduleSrc;
+    const yr=C().yearly(src.schedule);const labels=yr.map((y)=>'Yr '+y.year);
+    const accent=getComputedStyle(document.documentElement).getPropertyValue('--papaya').trim()||'#FF8000';
+    const data={labels,datasets:[{label:'Principal',data:yr.map((y)=>Math.round(y.principal)),backgroundColor:accent,borderRadius:4,stack:'s'},{label:'Interest',data:yr.map((y)=>Math.round(y.interest)),backgroundColor:'#C9CDD6',borderRadius:4,stack:'s'}]};
+    if(chartRef.current){chartRef.current.data=data;chartRef.current.update();return;}
+    chartRef.current=new window.Chart(canvasRef.current,{type:'bar',data,options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#A0A0A0',font:{family:'DM Sans',size:13},boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'rectRounded'}},tooltip:{backgroundColor:'#141414',borderColor:'#2A2A2A',borderWidth:1,titleColor:'#fff',bodyColor:'#A0A0A0',padding:12,titleFont:{family:'Syne',weight:'700'},bodyFont:{family:'JetBrains Mono'},callbacks:{label:(ctx)=>' '+ctx.dataset.label+': '+C().fmtRM(ctx.raw)}}},scales:{x:{stacked:true,grid:{display:false},ticks:{color:'#A0A0A0',font:{family:'DM Sans'}}},y:{stacked:true,grid:{color:'#1B1B1B'},ticks:{color:'#6A6A6A',font:{family:'JetBrains Mono',size:11},callback:(v)=>'RM'+(v/1000)+'k'}}}}});
+  },[view,method,scheduleSrc,reducing]);
+  cEffect(()=>()=>{if(chartRef.current){chartRef.current.destroy();chartRef.current=null;}},[]);
+  cEffect(()=>{if(view!=='chart'&&chartRef.current){chartRef.current.destroy();chartRef.current=null;}},[view]);
+
+  const addExtra=()=>setExtras((x)=>[...x,{id:Date.now(),type:'monthly',amount:'200',month:12}]);
+  const rmExtra=(id)=>setExtras((x)=>x.filter((e)=>e.id!==id));
+  const setExtra=(id,patch)=>setExtras((x)=>x.map((e)=>(e.id===id?{...e,...patch}:e)));
+
+  const PER=12;const sched=scheduleSrc.schedule;const pages=Math.ceil(sched.length/PER);const pageRows=sched.slice(page*PER,page*PER+PER);
+  cEffect(()=>setPage(0),[method,P,rate,months,extraOpen,extras]);
+
+  return(
+    <section className="section-pad" id="calculator">
+      <div className="wrap">
+        <p className="eyebrow">Car loan calculator</p>
+        <h2 className="section-head">Your numbers, instantly.</h2>
+        <div className="glass calc-panel">
+          <div className="method-toggle">
+            {[['reducing','Reducing Balance'],['flat','Flat Rate'],['compare','Compare Both']].map(([k,l])=>(
+              <button key={k} className={method===k?'active':''} onClick={()=>setMethod(k)}>{l}</button>
+            ))}
+          </div>
+          <div className="calc-grid">
+            <div>
+              <AffixField label="Car price" pre="RM" value={priceStr} onChange={(v)=>setPriceStr(v.replace(/[^0-9.,]/g,''))}/>
+              <AffixField label="Down payment" pre="RM" value={downStr} onChange={(v)=>setDownStr(v.replace(/[^0-9.,]/g,''))}/>
+              <AffixField label={method==='flat'?'Flat rate (p.a.)':'Interest rate (p.a.)'} suf="%" value={rateStr} onChange={(v)=>setRateStr(v.replace(/[^0-9.]/g,''))}/>
+              <div className="field">
+                <label>Loan tenure — {years} years</label>
+                <input className="slider" type="range" min="1" max="9" step="1" value={years} onChange={(e)=>setYears(Number(e.target.value))}/>
+              </div>
+              <div style={{fontSize:13,color:'var(--fg2)',fontFamily:'var(--font-mono)'}}>
+                Loan amount: <span style={{color:'var(--fg1)'}}>{C().fmtRM(P)}</span>
+              </div>
+              {method==='reducing'&&(
+                <div className={'disclosure'+(extraOpen?' open':'')}>
+                  <div className="disclosure-head" onClick={()=>setExtraOpen((o)=>!o)}>
+                    <span className="t"><Icon name="plus-circle" size={18} color="var(--papaya)"/> Extra repayment</span>
+                    <span className="chev"><Icon name="chevron-down" size={18}/></span>
+                  </div>
+                  <div className="disclosure-body">
+                    {extras.map((e)=>(
+                      <div className="extra-row" key={e.id}>
+                        <div>
+                          <label style={{fontSize:12,color:'var(--fg2)',display:'block',marginBottom:6}}>Type</label>
+                          <div className="mini-select">
+                            <button className={e.type==='monthly'?'active':''} onClick={()=>setExtra(e.id,{type:'monthly'})}>Monthly</button>
+                            <button className={e.type==='lump'?'active':''} onClick={()=>setExtra(e.id,{type:'lump'})}>Lump sum</button>
+                          </div>
+                        </div>
+                        <div>
+                          <label style={{fontSize:12,color:'var(--fg2)',display:'block',marginBottom:6}}>{e.type==='lump'?'Amount @ month '+e.month:'Extra / month'}</label>
+                          <div className="input-wrap" style={{padding:'0 12px'}}><span className="pre" style={{fontSize:14}}>RM</span><input style={{fontSize:16,padding:'11px 6px'}} value={e.amount} onChange={(ev)=>setExtra(e.id,{amount:ev.target.value.replace(/[^0-9.]/g,'')})}/></div>
+                        </div>
+                        <button className="x" onClick={()=>rmExtra(e.id)} title="Remove">×</button>
+                      </div>
+                    ))}
+                    <button className="add-row" onClick={addExtra}><Icon name="plus" size={15}/> Add another</button>
+                    {withExtra&&(interestSaved>1||monthsSaved>0)&&(
+                      <div className="savings-pills">
+                        <div className="spill"><div className="v">{C().fmtRM(interestSaved)}</div><div className="l">Interest saved</div></div>
+                        <div className="spill"><div className="v">{monthsSaved} mo</div><div className="l">Sooner payoff</div></div>
+                        <div className="spill"><div className="v">{C().payoffDate(withExtra.months)}</div><div className="l">New payoff date</div></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div>
+              {method!=='compare'?(
+                <div className="results">
+                  <RCard hi value={scheduleSrc.instalment} label="Monthly instalment"/>
+                  <RCard value={scheduleSrc.totalInterest} label="Total interest"/>
+                  <RCard value={scheduleSrc.totalPayable} label="Total payable"/>
+                  <RCard money={false} value={scheduleSrc.months} label="Months to clear"/>
+                </div>
+              ):(
+                <div>
+                  <div className="compare-grid">
+                    <div className="compare-col win">
+                      <h4>Reducing Balance</h4>
+                      <span style={{fontSize:12,color:'var(--fg2)'}}>Interest on outstanding</span>
+                      <div className="cm">{C().fmtRM(reducing.instalment)}</div>
+                      <span style={{fontSize:12,color:'var(--fg2)'}}>per month</span>
+                      <div style={{marginTop:14,fontSize:13,fontFamily:'var(--font-mono)',color:'var(--fg2)'}}>Total interest<br/><span style={{color:'var(--fg1)',fontSize:16}}>{C().fmtRM(reducing.totalInterest)}</span></div>
+                    </div>
+                    <div className="compare-col">
+                      <h4>Flat Rate</h4>
+                      <span style={{fontSize:12,color:'var(--fg2)'}}>Interest on full sum</span>
+                      <div className="cm">{C().fmtRM(flat.instalment)}</div>
+                      <span style={{fontSize:12,color:'var(--fg2)'}}>per month</span>
+                      <div style={{marginTop:14,fontSize:13,fontFamily:'var(--font-mono)',color:'var(--fg2)'}}>Total interest<br/><span style={{color:'var(--fg1)',fontSize:16}}>{C().fmtRM(flat.totalInterest)}</span></div>
+                    </div>
+                  </div>
+                  <div className="savings-banner">
+                    <Icon name="piggy-bank" size={30} color="var(--positive)"/>
+                    <div>
+                      <div style={{fontWeight:700,color:'var(--positive)'}}>Reducing balance saves you</div>
+                      <div className="v">{C().fmtRM(Math.max(0,compareSaved))} in interest over {years} years</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="chart-tabs">
+            <button className={view==='chart'?'active':''} onClick={()=>setView('chart')}>Amortisation chart</button>
+            <button className={view==='table'?'active':''} onClick={()=>setView('table')}>Schedule</button>
+          </div>
+          {view==='chart'?(
+            <div className="chart-box"><canvas ref={canvasRef}/></div>
+          ):(
+            <div>
+              <table className="schedule">
+                <thead><tr><th>Month</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead>
+                <tbody>{pageRows.map((r)=>(<tr key={r.month}><td>{r.month}</td><td>{C().fmtRM(r.payment)}</td><td>{C().fmtRM(r.principal)}</td><td>{C().fmtRM(r.interest)}</td><td>{C().fmtRM(r.balance)}</td></tr>))}</tbody>
+              </table>
+              <div className="pager">
+                <button disabled={page===0} onClick={()=>setPage((p)=>p-1)}>← Prev</button>
+                <span style={{color:'var(--fg2)',fontSize:13,fontFamily:'var(--font-mono)'}}>Page {page+1} / {pages} · {sched.length} months</span>
+                <button disabled={page>=pages-1} onClick={()=>setPage((p)=>p+1)}>Next →</button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+window.Calculator=Calculator;
+  </script>
+
+  <!-- App -->
+  <script type="text/babel">
+const{useEffect:aEffect}=React;
+
+const TWEAK_DEFAULTS={
+  accent:'#FF8000',accentName:'papaya',
+  headline:'Know before|you',headlineAccent:'drive.',
+  heroSub:'Calculate your exact car loan repayment in seconds. Reducing balance, flat rate, and extra repayment — all in one place.',
+  calcPrice:'100,000',calcDown:'10,000',calcRate:'2.85',calcYears:7,calcMethod:'reducing'
+};
+
+function applyAccent(hex){
+  function hex2rgb(h){const m=h.replace('#','');return{r:parseInt(m.slice(0,2),16),g:parseInt(m.slice(2,4),16),b:parseInt(m.slice(4,6),16)};}
+  function shade(hex,amt){const{r,g,b}=hex2rgb(hex);const k=amt>=0?255:0;const t=Math.abs(amt);const mix=(c)=>Math.round(c+(k-c)*t);return'#'+[mix(r),mix(g),mix(b)].map((c)=>c.toString(16).padStart(2,'0')).join('').toUpperCase();}
+  function hexA(hex,a){const{r,g,b}=hex2rgb(hex);return`rgba(${r},${g},${b},${a})`;}
+  const root=document.documentElement;
+  root.style.setProperty('--papaya',hex);
+  root.style.setProperty('--papaya-hover',shade(hex,0.10));
+  root.style.setProperty('--papaya-press',shade(hex,-0.12));
+  root.style.setProperty('--focus-ring',`0 0 0 2px ${hexA(hex,0.40)}`);
+  root.style.setProperty('--shadow-papaya',`0 12px 40px ${hexA(hex,0.28)}`);
+}
+
+const ACCENT_OPTIONS=[
+  {hex:'#FF8000',name:'Papaya'},{hex:'#38D39F',name:'Mint'},
+  {hex:'#FF3D5A',name:'Crimson'},{hex:'#FFD400',name:'Sunburst'},{hex:'#7C5CFF',name:'Violet'},
+];
+
+function App(){
+  const[t,setTweak]=useTweaks(TWEAK_DEFAULTS);
+  aEffect(()=>{applyAccent(t.accent);},[t.accent]);
+  const calcDefaults={price:t.calcPrice,down:t.calcDown,rate:t.calcRate,years:Number(t.calcYears)||7,method:t.calcMethod};
+  return(
+    <React.Fragment>
+      <Navbar/>
+      <Hero headline={t.headline} accent={t.headlineAccent} sub={t.heroSub}/>
+      <Calculator key={t.accent+'|'+JSON.stringify(calcDefaults)} defaults={calcDefaults}/>
+      <WhyCarnite/>
+      <ComparisonTable/>
+      <RatesTeaser/>
+      <Testimonials/>
+      <HowItWorks/>
+      <FAQ/>
+      <Footer/>
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Brand"/>
+        <TweakColor label="Accent color" value={t.accent} options={ACCENT_OPTIONS.map((o)=>o.hex)} onChange={(v)=>setTweak('accent',v)}/>
+        <TweakSection label="Hero copy"/>
+        <TweakText label="Headline" value={t.headline} placeholder="Use | to split lines" onChange={(v)=>setTweak('headline',v)}/>
+        <TweakText label="Accent word" value={t.headlineAccent} onChange={(v)=>setTweak('headlineAccent',v)}/>
+        <TweakText label="Subhead" value={t.heroSub} onChange={(v)=>setTweak('heroSub',v)}/>
+        <TweakSection label="Calculator defaults"/>
+        <TweakRadio label="Default method" value={t.calcMethod} options={[{value:'reducing',label:'Reducing'},{value:'flat',label:'Flat'},{value:'compare',label:'Compare'}]} onChange={(v)=>setTweak('calcMethod',v)}/>
+        <TweakText label="Car price (RM)" value={t.calcPrice} onChange={(v)=>setTweak('calcPrice',v)}/>
+        <TweakText label="Down payment (RM)" value={t.calcDown} onChange={(v)=>setTweak('calcDown',v)}/>
+        <TweakText label="Interest rate (%)" value={t.calcRate} onChange={(v)=>setTweak('calcRate',v)}/>
+        <TweakSlider label="Tenure" value={Number(t.calcYears)||7} min={1} max={9} step={1} unit=" yrs" onChange={(v)=>setTweak('calcYears',v)}/>
+      </TweaksPanel>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>

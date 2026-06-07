@@ -1,0 +1,178 @@
+/* ============================================================
+   CARNITE — Design Tokens
+   "Know before you drive."
+   Dark, bold, fast, trustworthy. McLaren-Papaya inspired fintech.
+   ------------------------------------------------------------
+   Load order:  Google Fonts  ->  this file  ->  your styles
+   Fonts (Google Fonts CDN):
+     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+   ============================================================ */
+
+:root {
+  /* ---- Brand color: McLaren Papaya ------------------------ */
+  --papaya:          #FF8000;   /* primary accent  */
+  --papaya-hover:    #FF9A00;   /* hover / lighter */
+  --papaya-press:    #E66E00;   /* active / darker */
+  --papaya-soft:     rgba(255, 128, 0, 0.12); /* tint fills   */
+  --papaya-line:     rgba(255, 128, 0, 0.20); /* glass border */
+  --papaya-glow:     rgba(255, 128, 0, 0.40); /* focus glow   */
+
+  /* ---- Neutrals / surfaces -------------------------------- */
+  --base:            #0A0A0A;   /* page background */
+  --surface:         #141414;   /* cards / panels  */
+  --surface-2:       #1B1B1B;   /* raised / hover  */
+  --border:          #2A2A2A;   /* hairline border */
+  --border-strong:   #3A3A3A;
+
+  /* ---- Secondary brand: Brushed Silver -------------------- */
+  --silver:          #C9CDD6;
+  --silver-light:    #E6E8EE;
+  --silver-dark:     #8A8E96;
+  --silver-soft:     rgba(201, 205, 214, 0.10);
+  --silver-line:     rgba(201, 205, 214, 0.22);
+  --silver-brushed:  linear-gradient(135deg, #E6E8EE 0%, #C9CDD6 38%, #8A8E96 100%);
+
+  /* ---- Text ----------------------------------------------- */
+  --fg1:             #FFFFFF;
+  --fg2:             #A0A0A0;
+  --fg3:             #6A6A6A;
+
+  /* ---- Glass (frosted) ------------------------------------ */
+  --glass-bg:        rgba(255, 255, 255, 0.04);
+  --glass-border:    rgba(255, 128, 0, 0.20);
+  --glass-blur:      blur(16px);
+
+  /* ---- Hero atmosphere ------------------------------------ */
+  --hero-core:       #1A0A00;
+  --hero-edge:       #0A0A0A;
+
+  /* ---- Semantic ------------------------------------------- */
+  --positive:        #38D39F;
+  --positive-soft:   rgba(56, 211, 159, 0.12);
+  --warn:            #FFB020;
+  --info:            #5B9DFF;
+
+  /* ---- Typography: families ------------------------------- */
+  --font-head:  'Syne', 'Arial Black', sans-serif;
+  --font-body:  'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-mono:  'JetBrains Mono', ui-monospace, monospace;
+
+  /* ---- Typography: type scale ----------------------------- */
+  --fs-display:   clamp(3rem, 7vw, 6rem);
+  --fs-h1:        clamp(2.25rem, 4.5vw, 3.5rem);
+  --fs-h2:        clamp(1.75rem, 3vw, 2.5rem);
+  --fs-h3:        1.5rem;
+  --fs-lead:      1.25rem;
+  --fs-body:      1rem;
+  --fs-sm:        0.875rem;
+  --fs-xs:        0.75rem;
+
+  --lh-tight:     1.04;
+  --lh-snug:      1.2;
+  --lh-body:      1.6;
+
+  --ls-tight:    -0.03em;
+  --ls-caps:      0.14em;
+
+  /* ---- Spacing scale (4px base) --------------------------- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 128px;
+  --section-y: clamp(64px, 10vw, 128px);
+  --gutter:   clamp(20px, 5vw, 48px);
+  --maxw:     1200px;
+
+  /* ---- Radii ---------------------------------------------- */
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   20px;
+  --r-xl:   28px;
+  --r-pill: 999px;
+
+  /* ---- Shadows / elevation -------------------------------- */
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-2: 0 8px 24px rgba(0,0,0,0.45);
+  --shadow-3: 0 24px 64px rgba(0,0,0,0.55);
+  --shadow-papaya: 0 12px 40px rgba(255,128,0,0.28);
+  --focus-ring: 0 0 0 2px rgba(255,128,0,0.40);
+
+  /* ---- Motion --------------------------------------------- */
+  --ease:       cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-snap:  cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast:   140ms;
+  --dur:        240ms;
+  --dur-slow:   480ms;
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT DEFAULTS
+   ============================================================ */
+
+body {
+  background: var(--base);
+  color: var(--fg1);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.h-display {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--fs-display);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--fg1);
+}
+h1, .h1 {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+}
+h2, .h2 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-snug);
+  letter-spacing: -0.02em;
+}
+h3, .h3 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-snug);
+}
+.lead {
+  font-family: var(--font-body);
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--fg2);
+}
+p, .body { font-family: var(--font-body); color: var(--fg1); }
+.muted { color: var(--fg2); }
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--papaya);
+}
+
+.metric, .num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}

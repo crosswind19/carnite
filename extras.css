@@ -1,0 +1,100 @@
+/* ============================================================
+   Carnite — extension sections (Comparison, Testimonials, FAQ)
+   Reuses tokens from colors_and_type.css + base styles.css
+   ============================================================ */
+
+/* ---- Comparison table -------------------------------------- */
+.compare-section { background:
+  radial-gradient(80% 50% at 50% 0%, rgba(255,128,0,0.06), transparent 60%),
+  var(--base); }
+.cmp-wrap { margin-top: 44px; border: 1px solid var(--border); border-radius: var(--r-lg);
+  overflow: hidden; background: var(--surface); }
+.cmp-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  align-items: stretch; }
+.cmp-row + .cmp-row { border-top: 1px solid var(--border); }
+.cmp-row > div { padding: 22px 24px; display: flex; align-items: center;
+  font-size: 15px; color: var(--fg1); }
+.cmp-row > div + div { border-left: 1px solid var(--border); }
+.cmp-row.head > div { color: var(--fg2); font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: var(--ls-caps); padding: 18px 24px; }
+.cmp-row.head .cmp-us { color: var(--papaya); }
+.cmp-row .cmp-feat { color: var(--fg1); font-weight: 600; }
+.cmp-row .cmp-feat small { display: block; color: var(--fg2); font-weight: 400;
+  font-size: 13px; margin-top: 3px; }
+.cmp-row .cmp-us { background: linear-gradient(180deg, rgba(255,128,0,0.06), rgba(255,128,0,0.02)); }
+.cmp-check { color: var(--positive); display: inline-flex; }
+.cmp-x { color: var(--fg3); display: inline-flex; }
+.cmp-cell-val { font-family: var(--font-mono); font-weight: 700; font-size: 16px; }
+@media (max-width: 768px) {
+  .cmp-row { grid-template-columns: 1.6fr 1fr 1fr; }
+  .cmp-row > div { padding: 14px 14px; font-size: 14px; }
+  .cmp-row.head > div { padding: 12px 14px; font-size: 11px; }
+  .cmp-row .cmp-feat small { font-size: 12px; }
+  .cmp-row .cmp-hide { display: none; }
+}
+
+/* ---- Testimonials ------------------------------------------ */
+.tt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  margin-top: 44px; }
+@media (max-width: 1100px) { .tt-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 720px)  { .tt-grid { grid-template-columns: 1fr; } }
+.tt-card { padding: 28px; display: flex; flex-direction: column; gap: 18px;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
+.tt-card:hover { border-color: var(--border-strong); }
+.tt-card .quote-mark { font-family: var(--font-head); font-weight: 800;
+  color: var(--papaya); font-size: 56px; line-height: 0.4; opacity: .9;
+  height: 22px; }
+.tt-card blockquote { margin: 0; font-size: 16px; line-height: 1.55;
+  color: var(--fg1); flex: 1; text-wrap: pretty; }
+.tt-card .who { display: flex; align-items: center; gap: 14px;
+  border-top: 1px solid var(--border); padding-top: 18px; }
+.tt-card .avatar { width: 42px; height: 42px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); font-weight: 700; font-size: 16px;
+  color: #0A0A0A;
+  background: var(--silver-brushed, linear-gradient(135deg, #E6E8EE, #8A8E96)); }
+.tt-card .who .name { font-weight: 700; font-size: 14px; color: var(--fg1); }
+.tt-card .who .meta { font-size: 12px; color: var(--fg2); font-family: var(--font-mono); }
+.tt-card .saved { display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 13px; color: var(--positive);
+  font-weight: 700; }
+.tt-card .saved::before { content: ''; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--positive);
+  box-shadow: 0 0 12px var(--positive); }
+
+/* ---- FAQ ---------------------------------------------------- */
+.faq-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 56px;
+  margin-top: 32px; }
+@media (max-width: 900px) { .faq-layout { grid-template-columns: 1fr; gap: 24px; } }
+.faq-list { display: flex; flex-direction: column; gap: 8px; }
+.faq-item { background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); overflow: hidden;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
+.faq-item.open { border-color: var(--papaya); background: var(--surface-2); }
+.faq-q { display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 20px 24px; cursor: pointer; width: 100%; text-align: left;
+  background: transparent; border: 0; color: var(--fg1); font-size: 16px;
+  font-weight: 600; font-family: var(--font-body); }
+.faq-q:hover { background: var(--surface-2); }
+.faq-q .chev { color: var(--fg2); display: inline-flex;
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease); }
+.faq-item.open .faq-q .chev { transform: rotate(45deg); color: var(--papaya); }
+.faq-a { padding: 0 24px; max-height: 0; overflow: hidden;
+  transition: max-height var(--dur-slow) var(--ease), padding var(--dur-slow) var(--ease);
+  color: var(--fg2); font-size: 15px; line-height: 1.6; }
+.faq-item.open .faq-a { max-height: 400px; padding: 0 24px 22px; }
+.faq-cta { padding: 32px; display: flex; flex-direction: column; gap: 16px;
+  align-self: start; position: sticky; top: 96px; }
+.faq-cta h3 { font-family: var(--font-head); font-size: 24px; margin: 0;
+  line-height: 1.2; letter-spacing: var(--ls-tight); }
+.faq-cta p { color: var(--fg2); margin: 0; font-size: 14px; line-height: 1.6; }
+.faq-cta .btn { align-self: flex-start; }
+
+/* ---- Section header alignment helper ----------------------- */
+.head-row { display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 32px; flex-wrap: wrap; }
+.head-row .ks { font-family: var(--font-mono); color: var(--fg2); font-size: 13px;
+  white-space: nowrap; }
+
+/* ---- Tweaks panel restraint -------------------------------- */
+.tweaks-host-active body { transition: none; }
